@@ -6,11 +6,20 @@ import pandas as pd
 import pickle
 
 # Loading the trained model and pickled objects
+#try:
+    #model = tf.keras.models.load_model('model.h5')
+#except Exception as e:
+    #st.error(f"Error loading model: {e}")
+
+# Loading the trained model and pickled objects
 try:
+    # Attempt to load the model
     model = tf.keras.models.load_model('model.h5')
+    if model is None:
+        raise ValueError("Model could not be loaded.")
 except Exception as e:
     st.error(f"Error loading model: {e}")
-
+    
 # Loading pickled files (encoders and scaler)
 
 with open('label_encoder_gender.pkl', 'rb') as file:
