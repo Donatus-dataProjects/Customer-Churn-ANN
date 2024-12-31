@@ -1,27 +1,23 @@
 import streamlit as st
 import numpy as np
 import tensorflow as tf
-from sklearn.preprocessing import StandardScaler, LabelEncoder, OneHotEncoder
+from sklearn.preprocessing import LabelEncoder, OneHotEncoder
 import pandas as pd
 import pickle
 
-# Loading the trained model and pickled objects
+# Load the trained model and pickled objects
 try:
     model = tf.keras.models.load_model('model.h5')
 except Exception as e:
     st.error(f"Error loading model: {e}")
 
-# Loading pickled files (encoders and scaler)
-
+# Load pickled files (encoders and scaler)
 with open('label_encoder_gender.pkl', 'rb') as file:
     label_encoder_gender = pickle.load(file)
-    
 with open('onehot_encoder_geo.pkl', 'rb') as file:
     onehot_encoder_geo = pickle.load(file)
-    
 with open('scaler.pkl', 'rb') as file:
     scaler = pickle.load(file)
-
 
 # Building the Streamlit app for customer churn prediction
 st.title('Customer Churn Prediction')
@@ -51,16 +47,12 @@ input_data = pd.DataFrame({
     'EstimatedSalary': [estimated_salary]
 })
 
-
-
-    # One-hot encode the 'Geography' column and use .toarray() to convert sparse matrix to dense
+# One-hot encode the 'Geography' column
 geo_encoded = onehot_encoder_geo.transform([[geography]]).toarray()
 geo_encoded_df = pd.DataFrame(geo_encoded, columns=onehot_encoder_geo.get_feature_names_out(['Geography']))
-    # Concatenating the 'geo_encoded_df' with input_data
 input_data = pd.concat([input_data.reset_index(drop=True), geo_encoded_df], axis=1)
 
-
-# Scaling the input_data
+# Scale the input data
 input_data_scaled = scaler.transform(input_data)
 
 # Display loading spinner and make prediction
@@ -76,4 +68,3 @@ with st.spinner('Making prediction...'):
             st.write('The customer is not likely to churn.')
     except Exception as e:
         st.error(f"Error making prediction: {e}") 
-
