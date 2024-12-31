@@ -53,10 +53,10 @@ input_data = pd.DataFrame({
 
 
 
-    # One-hot encode the 'Geography' column and use .toarray() to convert sparse matrix to dense
+# One-hot encode the 'Geography' column and use .toarray() to convert sparse matrix to dense
 geo_encoded = onehot_encoder_geo.transform([[geography]]).toarray()
 geo_encoded_df = pd.DataFrame(geo_encoded, columns=onehot_encoder_geo.get_feature_names_out(['Geography']))
-    # Concatenating the 'geo_encoded_df' with input_data
+# Concatenating the 'geo_encoded_df' with input_data
 input_data = pd.concat([input_data.reset_index(drop=True), geo_encoded_df], axis=1)
 
 
